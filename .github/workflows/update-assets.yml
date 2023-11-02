@@ -1,0 +1,64 @@
+name: update-assets
+
+on:
+  # Only trigger the workflow on demand
+  workflow_dispatch:
+    inputs:
+      upstreamBranch:
+        description: Branch on OSS repo to build assets from
+        required: true
+        default: main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-$${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  update-assets:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check out oss repo
+        uses: actions/checkout@v4
+        with:
+          repository: tailscale/tailscale
+          ref: ${{ inputs.upstreamBranch }}
+          path: oss
+
+      - name: Run yarn build
+        run: |
+          ./oss/tool/yarn --cwd oss/client/web install
+          ./oss/tool/yarn --cwd oss/client/web build --outDir ../../../build/ --emptyOutDir
+
+      - name: Get access token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        id: generate-token
+        with:
+          # Get token for app: https://github.com/apps/tailscale-code-updater
+          app_id: ${{ secrets.CODE_UPDATER_APP_ID }}
+          private_key: ${{ secrets.CODE_UPDATER_APP_PRIVATE_KEY }}
+
+      - name: Send pull request
+        id: pull-request
+        uses: peter-evans/create-pull-request@38e0b6e68b4c852a5500a94740f0e535e0d7ba54 #v4.2.4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          author: OSS Updater <noreply+oss-updater@tailscale.com>
+          committer: OSS Updater <noreply+oss-updater@tailscale.com>
+          branch: actions/update-assets
+          commit-message: "build: update pre-compiled assets"
+          title: "build: update pre-compiled assets"
+          delete-branch: true
+          # assign PR to the user that triggered this action
+          reviewers: ${{ github.triggering_actor }}
+
+      - name: Summary
+        if: ${{ steps.pull-request.outputs.pull-request-number }}
+        run: echo "${{ steps.pull-request.outputs.pull-request-operation}} ${{ steps.pull-request.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY
