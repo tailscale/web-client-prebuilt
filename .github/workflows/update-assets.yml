@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   update-assets:
-    runs-on: [self-hosted, linux]
+    runs-on: [ubuntu-latest]
 
     steps:
       - name: Check out code
