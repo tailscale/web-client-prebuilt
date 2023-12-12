@@ -7,8 +7,8 @@
     <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQflAx4QGA4EvmzDAAAA30lEQVRIx2NgGAWMCKa8JKM4A8Ovt88ekyLCDGOoyDBJMjExMbFy8zF8/EKsCAMDE8yAPyIwFps48SJIBpAL4AZwvoSx/r0lXgQpDN58EWL5x/7/H+vL20+JFxluQKVe5b3Ke5V+0kQQCamfoYKBg4GDwUKI8d0BYkWQkrLKewYBKPPDHUFiRaiZkBgmwhj/F5IgggyUJ6i8V3mv0kCayDAAeEsklXqGAgYGhgV3CnGrwVciYSYk0kokhgS44/JxqqFpiYSZbEgskd4dEBRk1GD4wdB5twKXmlHAwMDAAACdEZau06NQUwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wNy0xNVQxNTo1Mzo0MCswMDowMCVXsDIAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDctMTVUMTU6NTM6NDArMDA6MDBUCgiOAAAAAElFTkSuQmCC" />
     
     <link rel="preload" as="font" href="./assets/Inter.var.latin-39e72c07.woff2" type="font/woff2" crossorigin />
-    <script type="module" crossorigin src="./assets/index-3d60cdc6.js"></script>
-    <link rel="stylesheet" href="./assets/index-1a55a6ae.css">
+    <script type="module" crossorigin src="./assets/index-bbb6d81b.js"></script>
+    <link rel="stylesheet" href="./assets/index-de30c7a4.css">
   </head>
   <body class="px-2">
     <noscript>
@@ -17,13 +17,14 @@
     </noscript>
     
     <script>
+      // if this script is changed, also change hash in web.go
       window.addEventListener("load", () => {
         if (!window.Tailscale) {
           const rootEl = document.createElement("p")
-          rootEl.innerHTML = 'Tailscale was built without the web client. See <a href="https://github.com/tailscale/tailscale#building-the-web-client">Building the web client</a> for more information.'
+          rootEl.innerHTML = 'Tailscale web interface is unavailable.';
           document.body.append(rootEl)
         }
-      });
+      })
     </script>
   </body>
 </html>
